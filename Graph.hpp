@@ -10,13 +10,10 @@
 #define Graph_hpp
 
 #include <vector>
-#include <map>
+#include <unordered_set>
 #include <string>
 #include <fstream>
 #include <iostream>
-
-struct Edge;
-struct Vertex;
 
 class GraphLoader
 {
@@ -24,65 +21,66 @@ public:
     void Load(std::string fileName);
     
 protected:
-    virtual void onLoadedVertices(int n) = 0;
-    virtual void onLoadedEdge(int b, int e) = 0;
-};
-
-struct Vertex
-{
-    Vertex(int i) : index(i), isRemoved(0), marker(nullptr)
-    {
-        
-    }
-    
-    //    Vertex(int i, Edge *e) : index(i), isRemoved(0), marker(-1)
-    //    {
-    //        edges.push_back(e);
-    //    }
-    
-    void AddEdge(Edge *e, Vertex *v)
-    {
-        edges.push_back(e);
-        adjacents.push_back(v);
-    }
-    
-    int index;
-    int isRemoved;
-    int *marker;
-    
-    std::vector<Edge*> edges;
-    std::vector<Vertex*> adjacents;
-};
-
-struct Edge
-{
-    Edge(Vertex *b, Vertex *e) : beg(b), end(e)
-    {
-        beg->AddEdge(this, end);
-        end->AddEdge(this, beg);
-    }
-    
-    Vertex *beg;
-    Vertex *end;
+    virtual void onLoadedVertices(unsigned int n) = 0;
+    virtual void onLoadedEdge(unsigned int b, unsigned int e) = 0;
 };
 
 class Graph : public GraphLoader
 {
 public:
-    void Task();
+    std::vector<std::pair<unsigned int, unsigned int> > Task();
     void CleanUp();
     
+    void SetOnFoundSolution(std::function<void(unsigned int, unsigned int)> onSolution);
+    size_t GetVerticesCount() const;
+    size_t GetEdgesCount() const;
+    
 private:
+    struct Edge;
+    struct Vertex;
+    
     std::vector<Vertex*> vertices;
     std::vector<Edge*> edges;
-    
-    int markerCounter;
+    std::function<void(unsigned int ,unsigned int)> onFoundSolution;
+    std::vector<std::pair<unsigned int, unsigned int> > solutions;
     
     void StartMarking(Edge *e);
     void Mark(Vertex *v, int *markerVal);
     
-    void onLoadedVertices(int n);
-    void onLoadedEdge(int b, int e);
+    void onLoadedVertices(unsigned int n);
+    void onLoadedEdge(unsigned int b, unsigned int e);
+
+    struct Vertex
+    {
+        Vertex(unsigned int i) : index(i), isRemoved(0), marker(nullptr)
+        {
+        }
+        
+        void AddEdge(Edge *e, Vertex *v)
+        {
+            edges.push_back(e);
+            adjacents.push_back(v);
+        }
+        
+        unsigned int index;
+        int isRemoved;
+        int *marker;
+        
+        std::vector<Edge*> edges;
+        std::vector<Vertex*> adjacents;
+    };
+    
+    struct Edge
+    {
+        Edge(Vertex *b, Vertex *e) : beg(b), end(e)
+        {
+            beg->AddEdge(this, end);
+            end->AddEdge(this, beg);
+        }
+        
+        Vertex *beg;
+        Vertex *end;
+    };
 };
 
 #endif /* Graph_hpp */

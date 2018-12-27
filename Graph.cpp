@@ -57,134 +57,80 @@ void GraphLoader::Load(string fileName)
     }
 }
 
-void Graph::Task()
+vector<pair<unsigned int, unsigned int> > Graph::Task()
 {
-    cout<<"Debug info: "<<endl;
-    cout<<" verts count: "<<vertices.size()<<endl;
-    cout<<" edges count: "<<edges.size()<<endl;
-    
+    solutions.clear();
     size_t edgesCount = edges.size();
     
     for (int i = 0; i < edgesCount; i++)
-    {
-        
-        edges[i]->beg->isRemoved = 1;
-        edges[i]->end->isRemoved = 1;
-        
-        
-        
         StartMarking(edges[i]);
-        
-        edges[i]->beg->isRemoved = 0;
-        edges[i]->end->isRemoved = 0;
-        
-        //            if (markerCounter != 0)
-        //            {
-        //                //TODO: mark this adge as one of the solutions
-        //                cout<<"SOLUTION: "<<edges[i]->beg->index<<"  "<<edges[i]->end->index<<endl;
-        //            }
-        //
-        //            if (markerCounter < 0) cout<<endl<<"WTF "<<markerCounter<<endl;
-    }
+    
+    return solutions;
 }
 
 void Graph::StartMarking(Edge *e)
 {
+    e->beg->isRemoved = 1;
+    e->end->isRemoved = 1;
+     
     for (auto it : vertices)
         it->marker = nullptr;
     
-    //markerCounter = e->beg->adjacents.size() + e->end->adjacents.size() - 2;
-    map<Vertex*, int> elems;
+    unordered_set<Vertex*> elems;
     for (auto it : e->beg->adjacents)
     {
         if (it != e->end)
-            elems[it] = 0;
+            elems.insert(it);
     }
     for (auto it : e->end->adjacents)
     {
         if (it != e->beg)
-            elems[it] = 0;
+            elems.insert(it);
     }
     
-    markerCounter = elems.size();
+    size_t markerCounter = elems.size();
     
-    //Mark(e->beg, markerVal);
-    //Mark(e->end, markerVal);
-    
-    int i = 1;
-    //        for (int j = 0; j < e->beg->adjacents.size(); j++, i++)
-    //        {
-    //            Mark(e->beg->adjacents[j], i);
-    //        }
-    //
-    //        for (int j = 0; j < e->end->adjacents.size(); j++, i++)
-    //        {
-    //            Mark(e->end->adjacents[j], i);
-    //        }
-    
+    int markerIndex = 0;
     int *markerVal[markerCounter];
-    
-    map<Vertex*, int>::iterator it = elems.begin();
-    while (it != elems.end())
+    for (auto it : elems)
     {
-        markerVal[i-1] = new int;
-        *markerVal[i-1] = i;
-        //cout<<"edge "<<e->beg->index<<" "<<e->end->index<<"    launching for " << it->first->index<<endl;
-        Mark(it->first, markerVal[i-1]);
-        ++i;
-        ++it;
+        markerVal[markerIndex] = new int;
+        *markerVal[markerIndex] = markerIndex+1;
+
+        Mark(it, markerVal[markerIndex++]);
     }
     
-    map<int, int> finalCount;
-    for (int j = 0; j < markerCounter; j++)
+    bool isSolution = false;
+    for (int j = 0; j < markerCounter; ++j)
     {
-        //cout<<"TEST: "<<*markerVal[j]<<endl;
-        finalCount[*markerVal[j]] = 0;
+        if (*markerVal[j] != 1) isSolution = true;
+        
         delete markerVal[j];
     }
-    //cout<<"TEST------"<<endl;
     
-    if (finalCount.size() > 1)
+    if (isSolution)
     {
-        cout<<"Solution: " << e->beg->index<<"  "<<e->end->index<<endl;
+        if (onFoundSolution)
+            onFoundSolution(e->beg->index, e->end->index);
+        
+        solutions.push_back(pair<unsigned int, unsigned int>(e->beg->index, e->end->index));
     }
     
-    if (finalCount.size() == 0)
-    {
-        cout<<"WTF counter: "<<markerCounter<<endl;
-    }
+    e->beg->isRemoved = 0;
+    e->end->isRemoved = 0;
 }
 
 void Graph::Mark(Vertex *v, int *markerVal)
 {
-    //if (v->marker == markerVal || v->isRemoved == 1) return;
-    
-    //v->marker = markerVal;
-    //++markerCounter;
-    //        if (v->marker == 0)
-    //        {
-    //            v->marker = markerVal;
-    //            ++markerCounter;
-    //        }
-    
-    if (v->isRemoved) return;
-    
     if (v->marker != nullptr)
     {
-        //cout <<"marking "<<v->index<<" with the value " << *markerVal<<endl;
         *markerVal = *(v->marker);
         return;
     }
     
-    //        if (v->marker == 0)
-    //        {
-    //            --markerCounter;
-    //            //return;
-    //        }
+    if (v->isRemoved) return;
     
     v->marker = markerVal;
-    //TODO: dont use int markers -> use pointers to these int's; if algorithm meets already found vertex then change value under pointer
-    //      so it from two markers we would get one marker; after algorithm create a set (or map) to count number of all different values
     
     for (auto it : v->adjacents)
         Mark(it, markerVal);
@@ -192,9 +138,6 @@ void Graph::Mark(Vertex *v, int *markerVal)
 
 void Graph::CleanUp()
 {
-    //for (int i = 0; i < vertices.size(); i++) delete vertices[i];
-    //for (int i = 0; i < edges.size(); i++) delete edges[i];
-    
     for (auto it : vertices) delete it;
     for (auto it : edges) delete it;
     
@@ -202,7 +145,7 @@ void Graph::CleanUp()
     edges.clear();
 }
 
-void Graph::onLoadedVertices(int n)
+void Graph::onLoadedVertices(unsigned int n)
 {
     CleanUp();
     
@@ -210,7 +153,22 @@ void Graph::onLoadedVertices(int n)
         vertices.push_back(new Vertex(i));
 }
 
-void Graph::onLoadedEdge(int b, int e)
+void Graph::onLoadedEdge(unsigned int b, unsigned int e)
 {
     edges.push_back(new Edge(vertices[b], vertices[e]));
+}
+
+void Graph::SetOnFoundSolution(function<void(unsigned int, unsigned int)> onSolution)
+{
+    onFoundSolution = onSolution;
+}
+
+size_t Graph::GetVerticesCount() const
+{
+    return vertices.size();
+}
+
+size_t Graph::GetEdgesCount() const
+{
+    return edges.size();
 }

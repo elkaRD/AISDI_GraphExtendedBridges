@@ -9,8 +9,6 @@
 #include "Graph.hpp"
 using namespace std;
 
-
-
 void CreateFullGraph(int n, string fileName)
 {
     ofstream file;
@@ -34,11 +32,17 @@ void CreateFullGraph(int n, string fileName)
     file.close();
 }
 
+void onFoundSolution(unsigned int edgeBeg, unsigned int edgeEnd)
+{
+    cout << "Solution: " << edgeBeg << " " << edgeEnd << endl;
+}
+
 int main(int argc, const char * argv[])
 {
     //CreateFullGraph(100, "/Users/robert/studia/sem3/aisdi/aisdi_grafy/aisdi_grafy/data20.txt");
     
     Graph graph;
+    graph.SetOnFoundSolution(onFoundSolution);
     graph.Load("/Users/robert/studia/sem3/aisdi/aisdi_grafy/aisdi_grafy/data.txt");
     graph.Task();
     graph.CleanUp();
