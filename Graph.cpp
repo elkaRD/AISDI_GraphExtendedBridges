@@ -70,11 +70,16 @@ vector<pair<unsigned int, unsigned int> > Graph::Task()
 
 void Graph::StartMarking(Edge *e)
 {
+    
+     
+//    for (auto it : vertices)
+//        it->marker = nullptr;
+
+    for (auto it : vertices)
+        it->isRemoved = 0;
+    
     e->beg->isRemoved = 1;
     e->end->isRemoved = 1;
-     
-    for (auto it : vertices)
-        it->marker = nullptr;
     
     unordered_set<Vertex*> elems;
     for (auto it : e->beg->adjacents)
@@ -88,52 +93,71 @@ void Graph::StartMarking(Edge *e)
             elems.insert(it);
     }
     
-    size_t markerCounter = elems.size();
+//    size_t markerCounter = elems.size();
+//
+//    int markerIndex = 0;
+//    int *markerVal[markerCounter];
+//    for (auto it : elems)
+//    {
+//        markerVal[markerIndex] = new int;
+//        *markerVal[markerIndex] = markerIndex+1;
+//
+//        Mark(it, markerVal[markerIndex++]);
+//    }
+//
+//    bool isSolution = false;
+//    for (int j = 0; j < markerCounter; ++j)
+//    {
+//        if (*markerVal[j] != 1) isSolution = true;
+//
+//        delete markerVal[j];
+//    }
+//
+//    if (isSolution)
+//    {
+//        if (onFoundSolution)
+//            onFoundSolution(e->beg->index, e->end->index);
+//
+//        solutions.push_back(pair<unsigned int, unsigned int>(e->beg->index, e->end->index));
+//    }
     
-    int markerIndex = 0;
-    int *markerVal[markerCounter];
-    for (auto it : elems)
-    {
-        markerVal[markerIndex] = new int;
-        *markerVal[markerIndex] = markerIndex+1;
-
-        Mark(it, markerVal[markerIndex++]);
-    }
+    counter = 0;
+    auto it = elems.begin();
+    Mark(*it);
     
-    bool isSolution = false;
-    for (int j = 0; j < markerCounter; ++j)
-    {
-        if (*markerVal[j] != 1) isSolution = true;
-        
-        delete markerVal[j];
-    }
+    cout << " -------------------- ^ " << e->beg->index << " - " << e->end->index << "   (" << (*it)->index <<")" << endl;
     
-    if (isSolution)
+    if (counter != elems.size())
     {
         if (onFoundSolution)
             onFoundSolution(e->beg->index, e->end->index);
-        
+
         solutions.push_back(pair<unsigned int, unsigned int>(e->beg->index, e->end->index));
     }
     
-    e->beg->isRemoved = 0;
-    e->end->isRemoved = 0;
+//    e->beg->isRemoved = 0;
+//    e->end->isRemoved = 0;
 }
 
-void Graph::Mark(Vertex *v, int *markerVal)
+void Graph::Mark(Vertex *v/*, int *markerVal*/)
 {
-    if (v->marker != nullptr)
-    {
-        *markerVal = *(v->marker);
-        return;
-    }
+//    if (v->marker != nullptr)
+//    {
+//        *markerVal = *(v->marker);
+//        return;
+//    }
     
     if (v->isRemoved) return;
     
-    v->marker = markerVal;
+    v->isRemoved = 1;
+    ++counter;
+    
+    cout << "Found new vertex: " << v->index << endl;
+    
+    //v->marker = markerVal;
     
     for (auto it : v->adjacents)
-        Mark(it, markerVal);
+        Mark(it/*, markerVal*/);
 }
 
 void Graph::CleanUp()

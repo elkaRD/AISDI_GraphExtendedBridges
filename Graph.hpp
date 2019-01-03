@@ -45,10 +45,12 @@ private:
     std::vector<std::pair<unsigned int, unsigned int> > solutions;
     
     void StartMarking(Edge *e);
-    void Mark(Vertex *v, int *markerVal);
+    void Mark(Vertex *v/*, int *markerVal*/);
     
     void onLoadedVertices(unsigned int n);
     void onLoadedEdge(unsigned int b, unsigned int e);
+    
+    size_t counter;
 
     struct Vertex
     {
