@@ -54,7 +54,7 @@ private:
 
     struct Vertex
     {
-        Vertex(unsigned int i) : index(i), isRemoved(0), marker(nullptr)
+        Vertex(unsigned int i) : index(i), isRemoved(0)
         {
         }
         
@@ -66,7 +66,6 @@ private:
         
         unsigned int index;
         int isRemoved;
-        int *marker;
         
         std::vector<Edge*> edges;
         std::vector<Vertex*> adjacents;

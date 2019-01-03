@@ -39,7 +39,7 @@ void onFoundSolution(unsigned int edgeBeg, unsigned int edgeEnd)
 
 int main(int argc, const char * argv[])
 {
-    //CreateFullGraph(100, "/Users/robert/studia/sem3/aisdi/aisdi_grafy/aisdi_grafy/data20.txt");
+    //CreateFullGraph(300, "/Users/robert/studia/sem3/aisdi/aisdi_grafy/aisdi_grafy/data20.txt");
     
     Graph graph;
     graph.SetOnFoundSolution(onFoundSolution);
