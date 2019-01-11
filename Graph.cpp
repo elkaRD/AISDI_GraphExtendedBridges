@@ -70,11 +70,11 @@ vector<pair<unsigned int, unsigned int> > Graph::Task()
 
 void Graph::StartMarking(Edge *e)
 {
+    for (auto it : vertices)
+        it->isRemoved = 0;
+    
     e->beg->isRemoved = 1;
     e->end->isRemoved = 1;
-     
-    for (auto it : vertices)
-        it->marker = nullptr;
     
     unordered_set<Vertex*> elems;
     for (auto it : e->beg->adjacents)
@@ -88,52 +88,30 @@ void Graph::StartMarking(Edge *e)
             elems.insert(it);
     }
     
-    size_t markerCounter = elems.size();
+    counter = 0;
+    Mark(*(elems.begin()));
     
-    int markerIndex = 0;
-    int *markerVal[markerCounter];
-    for (auto it : elems)
-    {
-        markerVal[markerIndex] = new int;
-        *markerVal[markerIndex] = markerIndex+1;
-
-        Mark(it, markerVal[markerIndex++]);
-    }
-    
-    bool isSolution = false;
-    for (int j = 0; j < markerCounter; ++j)
-    {
-        if (*markerVal[j] != 1) isSolution = true;
-        
-        delete markerVal[j];
-    }
-    
-    if (isSolution)
+    //if (counter != elems.size())
+    if (counter != vertices.size() - 2)
     {
         if (onFoundSolution)
             onFoundSolution(e->beg->index, e->end->index);
         
+        //cout<<"             DEBUG: " << counter <<"   "<<(vertices.size()-2)<<"    "<<elems.size()<<endl;
+
         solutions.push_back(pair<unsigned int, unsigned int>(e->beg->index, e->end->index));
     }
-    
-    e->beg->isRemoved = 0;
-    e->end->isRemoved = 0;
 }
 
-void Graph::Mark(Vertex *v, int *markerVal)
+void Graph::Mark(Vertex *v)
 {
-    if (v->marker != nullptr)
-    {
-        *markerVal = *(v->marker);
-        return;
-    }
-    
     if (v->isRemoved) return;
     
-    v->marker = markerVal;
+    v->isRemoved = 1;
+    ++counter;
     
     for (auto it : v->adjacents)
-        Mark(it, markerVal);
+        Mark(it);
 }
 
 void Graph::CleanUp()
