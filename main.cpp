@@ -6,6 +6,7 @@
 //  Copyright © 2018 Robert. All rights reserved.
 //
 
+#include <sstream>
 #include "Graph.hpp"
 using namespace std;
 
@@ -37,15 +38,51 @@ void onFoundSolution(unsigned int edgeBeg, unsigned int edgeEnd)
     cout << "Solution: " << edgeBeg << " " << edgeEnd << endl;
 }
 
+void CreateTests()
+{
+    for (int i = 1; i < 500;)
+    {
+        stringstream ss;
+        ss<<i-1;
+        string name = "data/data"+ss.str()+".txt";
+        
+        CreateFullGraph(i-1, name);
+        i+=50;
+    }
+}
+
 int main(int argc, const char * argv[])
 {
     //CreateFullGraph(100, "/Users/robert/studia/sem3/aisdi/aisdi_grafy/aisdi_grafy/data20.txt");
+    //CreateTests();
     
-    Graph graph;
-    graph.SetOnFoundSolution(onFoundSolution);
-    graph.Load("/Users/robert/studia/sem3/aisdi/aisdi_grafy/aisdi_grafy/data.txt");
-    graph.Task();
-    graph.CleanUp();
+    //return 0;
+    
+    ofstream file;
+    file.open("results.txt");
+    
+    for (int i = 1; i < 500;)
+    {
+        clock_t begin = clock();
+        
+        Graph graph;
+        //graph.SetOnFoundSolution(onFoundSolution);
+        
+        stringstream ss;
+        ss<<i-1;
+        string name = "data/data"+ss.str()+".txt";
+        
+        graph.Load(name);
+        graph.Task();
+        graph.CleanUp();
+        
+        clock_t end = clock();
+        cout<<i<<"  "<<double(end-begin)/CLOCKS_PER_SEC<<endl;
+        file<<i<<"  "<<double(end-begin)/CLOCKS_PER_SEC<<endl;
+        i+=50;
+    }
+    
+    file.close();
     
     cout<<"End of the program" << endl;
     
