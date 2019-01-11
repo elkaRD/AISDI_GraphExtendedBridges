@@ -60,10 +60,13 @@ void GraphLoader::Load(string fileName)
 vector<pair<unsigned int, unsigned int> > Graph::Task()
 {
     solutions.clear();
-    size_t edgesCount = edges.size();
+    /*size_t edgesCount = edges.size();
     
     for (int i = 0; i < edgesCount; i++)
-        StartMarking(edges[i]);
+        StartMarking(edges[i]);*/
+    
+    for (const auto &it : edges)
+        StartMarking(it);
     
     return solutions;
 }
@@ -77,12 +80,12 @@ void Graph::StartMarking(Edge *e)
     e->end->isRemoved = 1;
     
     unordered_set<Vertex*> elems;
-    for (auto it : e->beg->adjacents)
+    for (const auto &it : e->beg->adjacents)
     {
         if (it != e->end)
             elems.insert(it);
     }
-    for (auto it : e->end->adjacents)
+    for (const auto &it : e->end->adjacents)
     {
         if (it != e->beg)
             elems.insert(it);
@@ -105,19 +108,20 @@ void Graph::StartMarking(Edge *e)
 
 void Graph::Mark(Vertex *v)
 {
-    if (v->isRemoved) return;
+    //if (v->isRemoved) return;
     
     v->isRemoved = 1;
     ++counter;
     
-    for (auto it : v->adjacents)
-        Mark(it);
+    for (const auto &it : v->adjacents)
+        if (!it->isRemoved)
+            Mark(it);
 }
 
 void Graph::CleanUp()
 {
-    for (auto it : vertices) delete it;
-    for (auto it : edges) delete it;
+    for (auto &it : vertices) delete it;
+    for (auto &it : edges) delete it;
     
     vertices.clear();
     edges.clear();
@@ -126,6 +130,8 @@ void Graph::CleanUp()
 void Graph::onLoadedVertices(unsigned int n)
 {
     CleanUp();
+    
+    vertices.reserve(n);
     
     for (int i = 0; i < n; ++i)
         vertices.push_back(new Vertex(i));
