@@ -36,7 +36,6 @@ void GraphLoader::Load(string fileName)
                     debug2 = e;
                     throw std::string("wrong input data: ");
                 }
-                //edges.push_back(new Edge(vertices[b], vertices[e]));
                 onLoadedEdge(b, e);
                 cout<<"Added edgee: "<<b<<" "<<e<<endl;
                 //TODO: fix problem with loading ethe last line
@@ -60,10 +59,6 @@ void GraphLoader::Load(string fileName)
 vector<pair<unsigned int, unsigned int> > Graph::Task()
 {
     solutions.clear();
-    /*size_t edgesCount = edges.size();
-    
-    for (int i = 0; i < edgesCount; i++)
-        StartMarking(edges[i]);*/
     
     for (const auto &it : edges)
         StartMarking(it);
@@ -73,7 +68,7 @@ vector<pair<unsigned int, unsigned int> > Graph::Task()
 
 void Graph::StartMarking(Edge *e)
 {
-    for (auto it : vertices)
+    for (auto &it : vertices)
         it->isRemoved = 0;
     
     e->beg->isRemoved = 1;
@@ -94,13 +89,10 @@ void Graph::StartMarking(Edge *e)
     counter = 0;
     Mark(*(elems.begin()));
     
-    //if (counter != elems.size())
     if (counter != vertices.size() - 2)
     {
         if (onFoundSolution)
             onFoundSolution(e->beg->index, e->end->index);
-        
-        //cout<<"             DEBUG: " << counter <<"   "<<(vertices.size()-2)<<"    "<<elems.size()<<endl;
 
         solutions.push_back(pair<unsigned int, unsigned int>(e->beg->index, e->end->index));
     }
@@ -108,8 +100,6 @@ void Graph::StartMarking(Edge *e)
 
 void Graph::Mark(Vertex *v)
 {
-    //if (v->isRemoved) return;
-    
     v->isRemoved = 1;
     ++counter;
     

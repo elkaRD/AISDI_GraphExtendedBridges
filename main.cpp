@@ -61,7 +61,7 @@ int main(int argc, const char * argv[])
     ofstream file;
     file.open("results.txt");
     
-    for (int i = 1; i < 500;)
+    /*for (int i = 1; i < 500;)
     {
         clock_t begin = clock();
         
@@ -80,7 +80,13 @@ int main(int argc, const char * argv[])
         cout<<i<<"  "<<double(end-begin)/CLOCKS_PER_SEC<<endl;
         file<<i<<"  "<<double(end-begin)/CLOCKS_PER_SEC<<endl;
         i+=50;
-    }
+    }*/
+    
+    Graph graph;
+    graph.Load("data2.txt");
+    graph.SetOnFoundSolution(onFoundSolution);
+    graph.Task();
+    graph.CleanUp();
     
     file.close();
     
