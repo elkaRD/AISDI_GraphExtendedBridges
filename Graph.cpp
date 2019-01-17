@@ -72,8 +72,8 @@ vector<pair<unsigned int, unsigned int> > Graph::Task()
 {
     solutions.clear();
     
-    for (const auto &it : edges)
-        StartMarking(it);
+    for (auto &it : edges)
+        StartMarking(&it);
     
     return solutions;
 }
@@ -81,42 +81,49 @@ vector<pair<unsigned int, unsigned int> > Graph::Task()
 void Graph::StartMarking(Edge *e)
 {
     for (auto &it : vertices)
-        it->isRemoved = 0;
+        it.isRemoved = 0;
     
-    e->beg->isRemoved = 1;
-    e->end->isRemoved = 1;
+    vertices[e->beg].isRemoved = 1;
+    vertices[e->end].isRemoved = 1;
     
-    unordered_set<Vertex*> elems;
-    for (const auto &it : e->beg->adjacents)
+    unordered_set<int> elems;
+    for (const auto &it : vertices[e->beg].adjacents)
     {
+        //cout << "test1: " << it << " " << e->end << endl;
         if (it != e->end)
             elems.insert(it);
     }
-    for (const auto &it : e->end->adjacents)
+    for (const auto &it : vertices[e->end].adjacents)
     {
+        //cout << "test2: " << it << " " << e->end << endl;
         if (it != e->beg)
             elems.insert(it);
     }
     
     counter = 0;
     Mark(*(elems.begin()));
+    //cout << "DEB: "<<elems.size()<<endl;
     
     if (counter != vertices.size() - 2)
     {
         if (onFoundSolution)
-            onFoundSolution(e->beg->index, e->end->index);
+            onFoundSolution(vertices[e->beg].index, vertices[e->end].index);
 
-        solutions.push_back(pair<unsigned int, unsigned int>(e->beg->index, e->end->index));
+        solutions.push_back(pair<unsigned int, unsigned int>(vertices[e->beg].index, vertices[e->end].index));
     }
 }
 
-void Graph::Mark(Vertex *v)
+void Graph::Mark(int v)
 {
-    v->isRemoved = 1;
+    //cout << "BEG: " << v << endl;
+    
+    vertices[v].isRemoved = 1;
     ++counter;
     
-    for (const auto &it : v->adjacents)
-        if (!it->isRemoved)
+    //cout << "DEBUG: " << v << endl;
+    
+    for (const auto &it : vertices[v].adjacents)
+        if (!vertices[it].isRemoved)
             Mark(it);
 }
 
@@ -127,8 +134,8 @@ Graph::~Graph()
 
 void Graph::CleanUp()
 {
-    for (auto &it : vertices) delete it;
-    for (auto &it : edges) delete it;
+    //for (auto &it : vertices) delete it;
+    //for (auto &it : edges) delete it;
     
     vertices.clear();
     edges.clear();
@@ -141,12 +148,13 @@ void Graph::onLoadedVertices(unsigned int n)
     vertices.reserve(n);
     
     for (int i = 0; i < n; ++i)
-        vertices.push_back(new Vertex(i));
+        vertices.push_back(Vertex(i));
 }
 
 void Graph::onLoadedEdge(unsigned int b, unsigned int e)
 {
-    edges.push_back(new Edge(vertices[b], vertices[e]));
+    edges.push_back(Edge(b, e, *this));
+    //(--edges.end())->Set();
 }
 
 void Graph::SetOnFoundSolution(function<void(unsigned int, unsigned int)> onSolution)

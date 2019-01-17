@@ -45,13 +45,13 @@ private:
     struct Edge;
     struct Vertex;
     
-    std::vector<Vertex*> vertices;
-    std::vector<Edge*> edges;
+    std::vector<Vertex> vertices;
+    std::vector<Edge> edges;
     std::function<void(unsigned int ,unsigned int)> onFoundSolution;
     std::vector<std::pair<unsigned int, unsigned int> > solutions;
     
     void StartMarking(Edge *e);
-    void Mark(Vertex *v);
+    void Mark(int v);
     
     void onLoadedVertices(unsigned int n);
     void onLoadedEdge(unsigned int b, unsigned int e);
@@ -64,29 +64,38 @@ private:
         {
         }
         
-        void AddEdge(Edge *e, Vertex *v)
+        void AddEdge(int v)
         {
-            edges.push_back(e);
+            //edges.push_back(e);
             adjacents.push_back(v);
         }
         
         unsigned int index;
         int isRemoved;
         
-        std::vector<Edge*> edges;
-        std::vector<Vertex*> adjacents;
+        std::vector<int> adjacents;
     };
+    
+    void debugFunc(int beg, int end)
+    {
+        vertices[beg].AddEdge(end);
+        vertices[end].AddEdge(beg);
+    }
     
     struct Edge
     {
-        Edge(Vertex *b, Vertex *e) : beg(b), end(e)
+        Edge(int b, int e, Graph &parent) : beg(b), end(e)
         {
-            beg->AddEdge(this, end);
-            end->AddEdge(this, beg);
+            //vertices[beg].AddEdge(end);
+            //vertices[end].AddEdge(beg);
+            parent.debugFunc(beg, end);
         }
         
-        Vertex *beg;
-        Vertex *end;
+     
+        //Vertex *beg;
+        //Vertex *end;
+        int beg;
+        int end;
     };
     
     friend std::istream& operator >> (std::istream &in, Graph &right);
