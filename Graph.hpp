@@ -2,8 +2,7 @@
 //  Graph.hpp
 //  aisdi_grafy
 //
-//  Created by Robert on 25/12/2018.
-//  Copyright © 2018 Robert. All rights reserved.
+//  Copyright © 2019 Robert Dudzinski. All rights reserved.
 //
 
 #ifndef Graph_hpp
@@ -20,11 +19,11 @@ class GraphLoader
 {
 public:
     void CreateK(const unsigned int k);
+    void CreateP(const unsigned int p);
+    void CreateC(const unsigned int c);
     
 protected:
-    //void Load(const std::string fileName);
     void Load(std::istream &input);
-    //void Load(const unsigned int k);
     
     virtual void onLoadedVertices(unsigned int n) = 0;
     virtual void onLoadedEdge(unsigned int b, unsigned int e) = 0;
@@ -52,7 +51,7 @@ private:
     std::vector<std::pair<unsigned int, unsigned int> > solutions;
     
     void StartMarking(Edge *e);
-    void Mark(Vertex *v/*, int *markerVal*/);
+    void Mark(Vertex *v);
     
     void onLoadedVertices(unsigned int n);
     void onLoadedEdge(unsigned int b, unsigned int e);

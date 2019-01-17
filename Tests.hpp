@@ -1,8 +1,8 @@
 //
 //  Tests.hpp
-//  
+//  aisdi_grafy
 //
-//  Created by Robert Dudziński on 17/01/2019.
+//  Copyright © 2019 Robert Dudzinski. All rights reserved.
 //
 
 #ifndef Tests_hpp

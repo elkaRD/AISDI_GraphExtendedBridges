@@ -1,8 +1,8 @@
 //
 //  Tests.cpp
-//  
+//  aisdi_grafy
 //
-//  Created by Robert Dudziński on 17/01/2019.
+//  Copyright © 2019 Robert Dudzinski. All rights reserved.
 //
 
 #include "Tests.hpp"
@@ -100,11 +100,67 @@ bool cTest3()
     return false;
 }
 
+bool cTest4()
+{
+    stringstream ss;
+    ss << "20";
+    
+    Graph graph;
+    ss >> graph;
+    vector<pair<unsigned int, unsigned int> > result = graph.Task();
+    graph.CleanUp();
+    
+    if (result.size() != 0) return true;
+    
+    return false;
+}
+
+bool cTest5()
+{
+    Graph graph;
+    vector<pair<unsigned int, unsigned int> > result = graph.Task();
+    graph.CleanUp();
+    
+    if (result.size() != 0) return true;
+    
+    return false;
+}
+
+bool cTest6()
+{
+    Graph graph;
+    graph.CreateP(5);
+    vector<pair<unsigned int, unsigned int> > result = graph.Task();
+    graph.CleanUp();
+    
+    if (result.size() != 2) return true;
+    if (!Contains(result, 1, 2)) return true;
+    if (!Contains(result, 2, 3)) return true;
+    
+    return false;
+}
+
+bool cTest7()
+{
+    Graph graph;
+    graph.CreateC(15);
+    vector<pair<unsigned int, unsigned int> > result = graph.Task();
+    graph.CleanUp();
+    
+    if (result.size() != 0) return true;
+    
+    return false;
+}
+
 bool PerformCorrectnessTests()
 {
     if (cTest1()) {cout << "test1 failed" << endl; return true;}
     if (cTest2()) {cout << "test2 failed" << endl; return true;}
     if (cTest3()) {cout << "test3 failed" << endl; return true;}
+    if (cTest4()) {cout << "test4 failed" << endl; return true;}
+    if (cTest5()) {cout << "test5 failed" << endl; return true;}
+    if (cTest6()) {cout << "test6 failed" << endl; return true;}
+    if (cTest7()) {cout << "test7 failed" << endl; return true;}
     
     return false;
 }

@@ -2,96 +2,38 @@
 //  Graph.cpp
 //  aisdi_grafy
 //
-//  Created by Robert on 25/12/2018.
-//  Copyright © 2018 Robert. All rights reserved.
+//  Copyright © 2019 Robert Dudzinski. All rights reserved.
 //
 
 #include "Graph.hpp"
 
 using namespace std;
 
-/*void GraphLoader::Load(const string fileName)
-{
-    int debug1;
-    int debug2;
-    
-    try
-    {
-        ifstream file;
-        file.open(fileName.c_str());
-        if (file.good())
-        {
-            int n;
-            file >> n;
-            
-            onLoadedVertices(n);
-            
-            while (!file.eof())
-            {
-                int b=0, e=0;
-                file >> b >> e;
-                if (b < 0 || b >= n || e < 0 || e >= n || b == e)
-                {
-                    debug1 = b;
-                    debug2 = e;
-                    throw std::string("wrong input data: ");
-                }
-                onLoadedEdge(b, e);
-                cout<<"Added edgee: "<<b<<" "<<e<<endl;
-                //TODO: fix problem with loading ethe last line
-            }
-            
-        }
-        else throw "could not open the file " + fileName;
-        file.close();
-    }
-    catch (std::string e)
-    {
-        cout << "Exception: " << e <<" "<<debug1<<" "<<debug2<< endl;
-        //file.close()
-    }
-    catch (exception e)
-    {
-        cout << "Unknown exception: " << e.what() << endl;
-    }
-}*/
-
 void GraphLoader::Load(std::istream &input)
 {
-    int debug1;
-    int debug2;
-    
     try
     {
+        int n;
+        input >> n;
+        
+        onLoadedVertices(n);
+        
+        while (input)
         {
-            int n;
-            input >> n;
-            
-            onLoadedVertices(n);
-            
-            while (input)
+            int b=0, e=0;
+            input >> b >> e;
+            if (b < 0 || b >= n || e < 0 || e >= n || b == e)
             {
-                int b=0, e=0;
-                input >> b >> e;
-                if (b < 0 || b >= n || e < 0 || e >= n || b == e)
-                {
-                    debug1 = b;
-                    debug2 = e;
-                    throw std::string("wrong input data: ");
-                }
-                onLoadedEdge(b, e);
-                cout<<"Added edgee: "<<b<<" "<<e<<endl;
-                //TODO: fix problem with loading ethe last line
+                if (!input) break;
+                
+                throw pair<unsigned int, unsigned int> (b, e);
             }
-            
+            onLoadedEdge(b, e);
         }
-        //else throw "could not open the file " + fileName;
-        //file.close();
     }
-    catch (std::string e)
+    catch (pair<unsigned int, unsigned int> e)
     {
-        cout << "Exception: " << e <<" "<<debug1<<" "<<debug2<< endl;
-        //file.close()
+        cout << "Exception: Wrong input data " << e.first <<" "<<e.second<<"   aborting" << endl;
     }
     catch (exception e)
     {
@@ -106,6 +48,24 @@ void GraphLoader::CreateK(const unsigned int k)
     for (unsigned int i = 0; i < k-1; ++i)
         for (unsigned int j = i+1; j < k; ++j)
             onLoadedEdge(i, j);
+}
+
+void GraphLoader::CreateP(const unsigned int p)
+{
+    onLoadedVertices(p);
+    
+    for (unsigned int i = 0; i < p-1; ++i)
+        onLoadedEdge(i, i+1);
+}
+
+void GraphLoader::CreateC(const unsigned int c)
+{
+    onLoadedVertices(c);
+    
+    for (unsigned int i = 0; i < c-1; ++i)
+        onLoadedEdge(i, i+1);
+    
+    onLoadedEdge(0, c-1);
 }
 
 vector<pair<unsigned int, unsigned int> > Graph::Task()
