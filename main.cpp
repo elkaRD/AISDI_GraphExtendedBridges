@@ -51,6 +51,16 @@ void CreateTests()
     }
 }
 
+void PerformCorrectnessTests()
+{
+    
+}
+
+void PerformPerformanceTests()
+{
+    
+}
+
 int main(int argc, const char * argv[])
 {
     //CreateFullGraph(100, "/Users/robert/studia/sem3/aisdi/aisdi_grafy/aisdi_grafy/data20.txt");
@@ -58,8 +68,8 @@ int main(int argc, const char * argv[])
     
     //return 0;
     
-    ofstream file;
-    file.open("results.txt");
+    //ofstream file;
+    //file.open("results.txt");
     
     /*for (int i = 1; i < 500;)
     {
@@ -83,12 +93,20 @@ int main(int argc, const char * argv[])
     }*/
     
     Graph graph;
-    graph.Load("data2.txt");
+    //graph.Load("data2.txt");
+    //graph.Load(cin);
+    //cin >> graph;
+    
+    ifstream file;
+    file.open("data2.txt");
+    file >> graph;
+    file.close();
+    
     graph.SetOnFoundSolution(onFoundSolution);
     graph.Task();
     graph.CleanUp();
     
-    file.close();
+    //file.close();
     
     cout<<"End of the program" << endl;
     

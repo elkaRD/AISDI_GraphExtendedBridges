@@ -10,7 +10,7 @@
 
 using namespace std;
 
-void GraphLoader::Load(string fileName)
+void GraphLoader::Load(const string fileName)
 {
     int debug1;
     int debug2;
@@ -54,6 +54,58 @@ void GraphLoader::Load(string fileName)
     {
         cout << "Unknown exception: " << e.what() << endl;
     }
+}
+
+void GraphLoader::Load(std::istream &input)
+{
+    int debug1;
+    int debug2;
+    
+    try
+    {
+        {
+            int n;
+            input >> n;
+            
+            onLoadedVertices(n);
+            
+            while (input)
+            {
+                int b=0, e=0;
+                input >> b >> e;
+                if (b < 0 || b >= n || e < 0 || e >= n || b == e)
+                {
+                    debug1 = b;
+                    debug2 = e;
+                    throw std::string("wrong input data: ");
+                }
+                onLoadedEdge(b, e);
+                cout<<"Added edgee: "<<b<<" "<<e<<endl;
+                //TODO: fix problem with loading ethe last line
+            }
+            
+        }
+        //else throw "could not open the file " + fileName;
+        //file.close();
+    }
+    catch (std::string e)
+    {
+        cout << "Exception: " << e <<" "<<debug1<<" "<<debug2<< endl;
+        //file.close()
+    }
+    catch (exception e)
+    {
+        cout << "Unknown exception: " << e.what() << endl;
+    }
+}
+
+void GraphLoader::Load(const unsigned int k)
+{
+    onLoadedVertices(k);
+    
+    for (unsigned int i = 0; i < k-1; ++i)
+        for (unsigned int j = i+1; j < k; ++j)
+            onLoadedEdge(i, j);
 }
 
 vector<pair<unsigned int, unsigned int> > Graph::Task()
@@ -145,4 +197,10 @@ size_t Graph::GetVerticesCount() const
 size_t Graph::GetEdgesCount() const
 {
     return edges.size();
+}
+
+std::istream& operator >> (std::istream &in, Graph &right)
+{
+    right.Load(in);
+    return in;
 }

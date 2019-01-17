@@ -18,10 +18,11 @@
 
 class GraphLoader
 {
-public:
-    void Load(std::string fileName);
-    
 protected:
+    void Load(const std::string fileName);
+    void Load(std::istream &input);
+    void Load(const unsigned int k);
+    
     virtual void onLoadedVertices(unsigned int n) = 0;
     virtual void onLoadedEdge(unsigned int b, unsigned int e) = 0;
 };
@@ -83,6 +84,10 @@ private:
         Vertex *beg;
         Vertex *end;
     };
+    
+    friend std::istream& operator >> (std::istream &in, Graph &right);
 };
+
+std::istream& operator >> (std::istream &in, Graph &right);
 
 #endif /* Graph_hpp */
