@@ -10,7 +10,7 @@
 
 using namespace std;
 
-void GraphLoader::Load(const string fileName)
+/*void GraphLoader::Load(const string fileName)
 {
     int debug1;
     int debug2;
@@ -54,7 +54,7 @@ void GraphLoader::Load(const string fileName)
     {
         cout << "Unknown exception: " << e.what() << endl;
     }
-}
+}*/
 
 void GraphLoader::Load(std::istream &input)
 {
@@ -99,7 +99,7 @@ void GraphLoader::Load(std::istream &input)
     }
 }
 
-void GraphLoader::Load(const unsigned int k)
+void GraphLoader::CreateK(const unsigned int k)
 {
     onLoadedVertices(k);
     
@@ -158,6 +158,11 @@ void Graph::Mark(Vertex *v)
     for (const auto &it : v->adjacents)
         if (!it->isRemoved)
             Mark(it);
+}
+
+Graph::~Graph()
+{
+    CleanUp();
 }
 
 void Graph::CleanUp()

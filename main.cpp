@@ -8,6 +8,7 @@
 
 #include <sstream>
 #include "Graph.hpp"
+#include "Tests.hpp"
 using namespace std;
 
 void CreateFullGraph(int n, string fileName)
@@ -51,15 +52,7 @@ void CreateTests()
     }
 }
 
-void PerformCorrectnessTests()
-{
-    
-}
 
-void PerformPerformanceTests()
-{
-    
-}
 
 int main(int argc, const char * argv[])
 {
@@ -92,13 +85,20 @@ int main(int argc, const char * argv[])
         i+=50;
     }*/
     
+    if (PerformCorrectnessTests())
+        cout << "FAILED TESTS" << endl;
+    else
+        cout << "PASSED TESTS" << endl;
+    
+    PerformPerformanceTests(50, 200, 50);
+    
     Graph graph;
     //graph.Load("data2.txt");
     //graph.Load(cin);
     //cin >> graph;
     
     ifstream file;
-    file.open("data2.txt");
+    file.open("data3.txt");
     file >> graph;
     file.close();
     

@@ -18,10 +18,13 @@
 
 class GraphLoader
 {
+public:
+    void CreateK(const unsigned int k);
+    
 protected:
-    void Load(const std::string fileName);
+    //void Load(const std::string fileName);
     void Load(std::istream &input);
-    void Load(const unsigned int k);
+    //void Load(const unsigned int k);
     
     virtual void onLoadedVertices(unsigned int n) = 0;
     virtual void onLoadedEdge(unsigned int b, unsigned int e) = 0;
@@ -30,6 +33,8 @@ protected:
 class Graph : public GraphLoader
 {
 public:
+    ~Graph();
+    
     std::vector<std::pair<unsigned int, unsigned int> > Task();
     void CleanUp();
     
