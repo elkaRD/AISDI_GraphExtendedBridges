@@ -86,20 +86,22 @@ void Graph::StartMarking(Edge *e)
     e->beg->isRemoved = 1;
     e->end->isRemoved = 1;
     
-    unordered_set<Vertex*> elems;
-    for (const auto &it : e->beg->adjacents)
-    {
-        if (it != e->end)
-            elems.insert(it);
-    }
-    for (const auto &it : e->end->adjacents)
-    {
-        if (it != e->beg)
-            elems.insert(it);
-    }
-    
     counter = 0;
-    Mark(*(elems.begin()));
+
+    for (const auto &it : e->beg->adjacents)
+        if (it != e->end)
+        {
+            Mark(it);
+            break;
+        }
+
+    if (counter == 0)
+        for (const auto &it : e->end->adjacents)
+            if (it != e->beg)
+            {
+                Mark(it);
+                break;
+            }
     
     if (counter != vertices.size() - 2)
     {

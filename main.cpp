@@ -23,6 +23,7 @@ int main(int argc, const char * argv[])
         cout << "PASSED TESTS" << endl;
     
     PerformPerformanceTests(50, 200, 50);
+    //PerformPerformanceTests(300);
     
     Graph graph;
 
