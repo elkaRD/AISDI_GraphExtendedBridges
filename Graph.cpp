@@ -1,8 +1,14 @@
 //
-//  Graph.cpp
-//  aisdi_grafy
+//  EN: The last project for Algorithms and Data Structures lectures at Warsaw University of Technology
+//      Finding "extended bridges" in given graph
 //
-//  Copyright © 2019 Robert Dudzinski. All rights reserved.
+//  PL: Projekt AISDI (Algorytmy i Struktury Danych) PW WEiTI 18Z
+//      Grafy - Wyszukiwanie mostow rozleglych
+//
+//      Copyright (C) 2019 Robert Dudzinski
+//      Warsaw, January 2019
+//
+//      File: Graph.cpp
 //
 
 #include "Graph.hpp"
@@ -81,10 +87,10 @@ vector<pair<unsigned int, unsigned int> > Graph::Task()
 void Graph::StartMarking(Edge *e)
 {
     for (auto &it : vertices)
-        it->isRemoved = 0;
+        it->isRemoved = false;
     
-    e->beg->isRemoved = 1;
-    e->end->isRemoved = 1;
+    e->beg->isRemoved = true;
+    e->end->isRemoved = true;
     
     counter = 0;
 
@@ -114,7 +120,7 @@ void Graph::StartMarking(Edge *e)
 
 void Graph::Mark(Vertex *v)
 {
-    v->isRemoved = 1;
+    v->isRemoved = true;
     ++counter;
     
     for (const auto &it : v->adjacents)

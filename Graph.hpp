@@ -1,15 +1,20 @@
 //
-//  Graph.hpp
-//  aisdi_grafy
+//  EN: The last project for Algorithms and Data Structures lectures at Warsaw University of Technology
+//      Finding "extended bridges" in given graph
 //
-//  Copyright © 2019 Robert Dudzinski. All rights reserved.
+//  PL: Projekt AISDI (Algorytmy i Struktury Danych) PW WEiTI 18Z
+//      Grafy - Wyszukiwanie mostow rozleglych
+//
+//      Copyright (C) 2019 Robert Dudzinski
+//      Warsaw, January 2019
+//
+//      File: Graph.hpp
 //
 
 #ifndef Graph_hpp
 #define Graph_hpp
 
 #include <vector>
-//#include <unordered_set>
 #include <string>
 #include <fstream>
 #include <iostream>
@@ -71,7 +76,7 @@ private:
         }
         
         unsigned int index;
-        int isRemoved;
+        bool isRemoved;
         
         std::vector<Edge*> edges;
         std::vector<Vertex*> adjacents;

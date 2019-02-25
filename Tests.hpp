@@ -1,8 +1,14 @@
 //
-//  Tests.hpp
-//  aisdi_grafy
+//  EN: The last project for Algorithms and Data Structures lectures at Warsaw University of Technology
+//      Finding "extended bridges" in given graph
 //
-//  Copyright © 2019 Robert Dudzinski. All rights reserved.
+//  PL: Projekt AISDI (Algorytmy i Struktury Danych) PW WEiTI 18Z
+//      Grafy - Wyszukiwanie mostow rozleglych
+//
+//      Copyright (C) 2019 Robert Dudzinski
+//      Warsaw, January 2019
+//
+//      File: Tests.hpp
 //
 
 #ifndef Tests_hpp
